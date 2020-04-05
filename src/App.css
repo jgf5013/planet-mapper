@@ -1,0 +1,18 @@
+.App {
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+  text-align: center;
+  
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+
+  height: 100%;
+}
+
+
+
+.App-header {
+  min-height: 10vh;
+}
