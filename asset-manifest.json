@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/planet-mapper/static/css/main.723d483e.chunk.css",
+    "main.js": "/planet-mapper/static/js/main.b64c1552.chunk.js",
+    "main.js.map": "/planet-mapper/static/js/main.b64c1552.chunk.js.map",
+    "runtime-main.js": "/planet-mapper/static/js/runtime-main.7ebf5b83.js",
+    "runtime-main.js.map": "/planet-mapper/static/js/runtime-main.7ebf5b83.js.map",
+    "static/js/2.aae4880a.chunk.js": "/planet-mapper/static/js/2.aae4880a.chunk.js",
+    "static/js/2.aae4880a.chunk.js.map": "/planet-mapper/static/js/2.aae4880a.chunk.js.map",
+    "index.html": "/planet-mapper/index.html",
+    "precache-manifest.e8a7de4c21c8165f22f554a750fbe82a.js": "/planet-mapper/precache-manifest.e8a7de4c21c8165f22f554a750fbe82a.js",
+    "service-worker.js": "/planet-mapper/service-worker.js",
+    "static/css/main.723d483e.chunk.css.map": "/planet-mapper/static/css/main.723d483e.chunk.css.map",
+    "static/js/2.aae4880a.chunk.js.LICENSE.txt": "/planet-mapper/static/js/2.aae4880a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7ebf5b83.js",
+    "static/js/2.aae4880a.chunk.js",
+    "static/css/main.723d483e.chunk.css",
+    "static/js/main.b64c1552.chunk.js"
+  ]
+}
