@@ -43,7 +43,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "http://jgf5013.github.io/planet-mapper/",
+  "homepage": "https://jgf5013.github.io/planet-mapper/",
   "devDependencies": {
     "gh-pages": "^2.2.0"
   }
