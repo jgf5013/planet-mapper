@@ -3,9 +3,6 @@ import React from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import './PlanetChart.css';
-
-import { render } from '@testing-library/react';
 import { Planet } from './Planet.interface';
 import { AxisOption } from './AxisOption.interface';
 
@@ -29,7 +26,6 @@ export class PlanetChart extends React.Component<PlanetProps> {
     this.internalChart.addSeries({
       type: 'scatter',
       name: 'Confirmed Planets',
-      color: 'var(--text-color)',
       data: this.props.planets.map((p) => {
         const x: number = Number(p[this.props.axisProps.x.attribute]);
         const y: number = Number(p[this.props.axisProps.y.attribute]);
@@ -43,12 +39,13 @@ export class PlanetChart extends React.Component<PlanetProps> {
   }
   
   render() {
-      return (<div className="PlanetChart">
+      return (
+        <div className="PlanetChart">
           <HighchartsReact
             highcharts={Highcharts}
             options={this.props.chartOptions}
             callback={ this.afterChartCreated }/>
-      </div>
+        </div>
     );
   }
 

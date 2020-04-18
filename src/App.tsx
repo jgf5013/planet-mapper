@@ -1,71 +1,96 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 import PlanetChart from './PlanetChart';
-import { ChartOptions } from 'highcharts';
 
 import confiredExoplanets from './confirmed-explanets.json';
 import { Planet } from './Planet.interface';
 import { AXIS_OPTIONS } from './App.constants';
+import ControlPanel from './ControlPanel';
+import { makeStyles, createStyles, Theme, Grid, withTheme, Paper } from '@material-ui/core';
 
-export class App extends React.Component {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      fontSize: 'calc(10px + 2vmin)'
+    },
+    header: {
+      minHeight: '10vh'
+    },
+    appWrapper: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexDirection: 'column',
+      [theme.breakpoints.up('md')]: {
+        flexDirection: 'row-reverse'
+      },
+    }
+  }),
+);
 
-  planets: Planet[] = [];
 
-  axisProps = {
+export function App(props: { theme: Theme }) {
+
+  const classes = useStyles();
+
+  const axisProps = {
     x: AXIS_OPTIONS[0],
     y: AXIS_OPTIONS[1]
   };
-  initialChartOptions: Highcharts.Options = {
+  const initialChartOptions: Highcharts.Options = {
     chart: {
-      type: 'scatter'
+      type: 'scatter',
+      backgroundColor: props.theme.palette.background.default
+    },
+    legend: {
+      itemStyle: {
+        color: props.theme.palette.primary.contrastText
+      }
     },
     title: {
-        text: `${this.axisProps.x.label} vs ${this.axisProps.y.label}`,
-        style: {
-          color: 'var(--text-color)'
-        }
+      text: `${axisProps.x.label} vs ${axisProps.y.label}`,
+      style: {
+        color: props.theme.palette.primary.contrastText
+      }
     },
     subtitle: {
-        text: '<a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>',
-        useHTML: true
+      text: `<a style="color: ${props.theme.palette.primary.contrastText}" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
+      useHTML: true,
     },
     plotOptions: {
-        scatter: {
-            marker: {
-                radius: 2,
-                states: {
-                    hover: {
-                        enabled: true,
-                        lineColor: 'rgb(100,100,100)'
-                    }
-                }
-            },
-            tooltip: {
-                headerFormat: '<b>{series.name}</b><br>',
-                pointFormat: `{point.x} ${this.axisProps.x.units}, {point.y} ${this.axisProps.y.units}`
+      scatter: {
+        marker: {
+          radius: 2,
+          states: {
+            hover: {
+              enabled: true,
             }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: `{point.x} ${axisProps.x.units}, {point.y} ${axisProps.y.units}`
         }
+      }
     }
   };
 
 
-  constructor(props: any) {
-    super(props);
-    this.planets = [...confiredExoplanets];
-  }
-
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
+  return (
+    <Grid className={classes.root} container direction="column">
+      <Grid item xs={12}>
+        <Grid container className={classes.header} justify="center">
           Planet Mapper
-        </header>
-        <PlanetChart chartOptions={this.initialChartOptions} planets={this.planets} axisProps={this.axisProps}/>
-      </div>
-    );
-  }
+        </Grid>
+      </Grid>
+      <Grid item xs={12} className={classes.appWrapper}>
+        <Grid>
+          <ControlPanel />
+        </Grid>
+        <Grid>
+          <PlanetChart chartOptions={initialChartOptions} planets={confiredExoplanets} axisProps={axisProps} />
+        </Grid>
+      </Grid>
+    </Grid>
+  );
 }
 
-export default App;
+export default withTheme(App);
