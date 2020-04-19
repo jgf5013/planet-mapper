@@ -1,19 +1,14 @@
 import React from 'react';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 
 
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, ListSubheader, ListItem, Grid } from '@material-ui/core';
 import { AXIS_OPTIONS } from './App.constants';
-import { AxisOption } from './AxisOption.interface';
+import { Axis } from './Axis';
 
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
     },
     formControl: {
       margin: theme.spacing(1),
@@ -25,36 +20,24 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const initialState = {
+  xAxis: AXIS_OPTIONS[0].axes[0].attribute,
+  yAxis: AXIS_OPTIONS[1].axes[0].attribute
+}
+
 
 export function ControlPanel() {
 
-  const [xAxis, setXAxis] = React.useState('');
-
-  const handleAxisChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setXAxis(event.target.value as string);
-  };
 
   const classes = useStyles();
+  if (!AXIS_OPTIONS) return null;
   return (
-    <div className={classes.root}>
-
-      <FormControl className={classes.formControl}>
-          <InputLabel id="demo-simple-select-label">X Axis</InputLabel>
-          <Select
-            labelId="x-axis-select-label"
-            id="x-axis-select"
-            value="xAxis"
-            onChange={handleAxisChange}>
-              {AXIS_OPTIONS.map((axis) => (
-              <MenuItem key={axis.key} value={axis.key}>{axis.label}</MenuItem>
-              ))}
-          </Select>
-      </FormControl>
-    </div>
+    <Grid container className={classes.root} justify="space-between">
+      <Axis axis={initialState.xAxis} axisLabel={'X Axis'}/>
+      <Axis axis={initialState.yAxis} axisLabel={'Y Axis'}/>
+    </Grid>
   );
+
+
 }
-
-export default ControlPanel;
-
- 
  
