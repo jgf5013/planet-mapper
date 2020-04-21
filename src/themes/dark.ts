@@ -1,9 +1,9 @@
 import { createMuiTheme, ThemeOptions } from '@material-ui/core';
 
-const theme: ThemeOptions = {
+export const darkTheme: Partial<ThemeOptions> = {
   palette: {
     type: 'dark'
   }
 };
 
-export const darkTheme = createMuiTheme(theme);
+// export const darkTheme = createMuiTheme(theme);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -6,7 +6,6 @@ import HighchartsReact from 'highcharts-react-official';
 import { Planet } from './Planet.interface';
 import { AxisOption } from './AxisOption.interface';
 import { withTheme, Theme } from '@material-ui/core';
-
 interface PlanetProps {
   theme: Theme,
   planets: Planet [],
@@ -64,6 +63,7 @@ export class PlanetChart extends React.Component<PlanetProps> {
   }
 
   componentDidMount() {
+    console.log('props: ', this.props);
     this.internalChart.addSeries({
       type: 'scatter',
       name: 'Confirmed Planets',
@@ -80,13 +80,16 @@ export class PlanetChart extends React.Component<PlanetProps> {
   }
   
   render() {
-      return (
-        <div className="PlanetChart">
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={this.chartOptions}
-            callback={ this.afterChartCreated }/>
-        </div>
+    if(this.chartOptions.chart) {
+      this.chartOptions.chart.backgroundColor = this.props.theme.palette.background.default;
+    }
+    return (
+      <div className="PlanetChart">
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={this.chartOptions}
+          callback={ this.afterChartCreated }/>
+      </div>
     );
   }
 

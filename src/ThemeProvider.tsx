@@ -18,14 +18,14 @@ const ThemeProvider: React.FC = (props) => {
     // Retrieve the theme object by theme name
     const theme = getThemeByName(themeName);
 
-
     const setThemeName = (themeName: string): void => {
-        localStorage.setItem('appTheme', themeName);
+        localStorage.setItem("appTheme", themeName);
         _setThemeName(themeName);
-    }
+      }
+
 
     return (
-        <ThemeContext.Provider value={_setThemeName}>
+        <ThemeContext.Provider value={setThemeName}>
             <MuiThemeProvider theme={theme}>{props.children}</MuiThemeProvider>
         </ThemeContext.Provider>
     );
