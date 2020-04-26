@@ -5,5 +5,3 @@ export const darkTheme: Partial<ThemeOptions> = {
     type: 'dark'
   }
 };
-
-// export const darkTheme = createMuiTheme(theme);

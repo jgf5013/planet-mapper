@@ -21,44 +21,6 @@ export class PlanetChart extends React.Component<PlanetProps> {
 
   constructor(props: PlanetProps) {
     super(props);
-    this.chartOptions = {
-      chart: {
-        type: 'scatter',
-        backgroundColor: props.theme.palette.background.default
-      },
-      legend: {
-        itemStyle: {
-          color: props.theme.palette.primary.contrastText
-        }
-      },
-      title: {
-        text: `${props.axisProps.x.label} vs ${props.axisProps.y.label}`,
-        style: {
-          color: props.theme.palette.primary.contrastText
-        },
-        margin: 25
-      },
-      subtitle: {
-        text: `<a style="color: ${props.theme.palette.primary.contrastText}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
-        useHTML: true,
-      },
-      plotOptions: {
-        scatter: {
-          marker: {
-            radius: 2,
-            states: {
-              hover: {
-                enabled: true,
-              }
-            }
-          },
-          tooltip: {
-            headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: `{point.x} ${props.axisProps.x.units}, {point.y} ${props.axisProps.y.units}`
-          }
-        }
-      }
-    };
     this.afterChartCreated = this.afterChartCreated.bind(this);
   }
 
@@ -80,11 +42,47 @@ export class PlanetChart extends React.Component<PlanetProps> {
   }
   
   render() {
-    if(this.chartOptions.chart) {
-      this.chartOptions.chart.backgroundColor = this.props.theme.palette.background.default;
-    }
+    this.chartOptions = {
+      chart: {
+        type: 'scatter',
+        backgroundColor: this.props.theme.palette.background.default
+      },
+      legend: {
+        itemStyle: {
+          color: this.props.theme.palette.primary.contrastText
+        }
+      },
+      title: {
+        text: `${this.props.axisProps.x.label} vs ${this.props.axisProps.y.label}`,
+        style: {
+          color: this.props.theme.palette.primary.contrastText
+        },
+        margin: 25
+      },
+      subtitle: {
+        text: `<a style="color: ${this.props.theme.palette.primary.contrastText}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
+        useHTML: true,
+      },
+      plotOptions: {
+        scatter: {
+          marker: {
+            radius: 2,
+            states: {
+              hover: {
+                enabled: true,
+              }
+            }
+          },
+          tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: `{point.x} ${this.props.axisProps.x.units}, {point.y} ${this.props.axisProps.y.units}`
+          }
+        }
+      }
+    };
+    console.log(this.props.theme);
     return (
-      <div className="PlanetChart">
+      <div>
         <HighchartsReact
           highcharts={Highcharts}
           options={this.chartOptions}
@@ -95,7 +93,7 @@ export class PlanetChart extends React.Component<PlanetProps> {
 
 }
 
-export default withTheme(PlanetChart);
-
+// export default withTheme(PlanetChart);
+export default PlanetChart;
  
  

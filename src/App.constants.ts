@@ -1,4 +1,11 @@
 import { AxisOption, AxisGroup } from "./AxisOption.interface";
+import { Theme } from "@material-ui/core";
+import { getThemeByName } from "./themes/base";
+
+// export const THEMES: any = {
+//     lightTheme: ,
+//     darkTheme: getThemeByName('darkTheme')
+// }
 
 export const AXIS_OPTIONS: AxisGroup[] = [
     {
@@ -20,4 +27,4 @@ export const AXIS_OPTIONS: AxisGroup[] = [
             units: "Light Years"
         }]
     }
-]
+];

@@ -4,13 +4,12 @@ import { CssBaseline } from '@material-ui/core';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import ThemeProvider from './ThemeProvider';
+import { StateProvider } from './StateProvider';
 
 ReactDOM.render(
-    <ThemeProvider>
-      <CssBaseline />
+    <StateProvider>
       <App />
-    </ThemeProvider>,
+    </StateProvider>,
   document.getElementById('root')
 );
 
