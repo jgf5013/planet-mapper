@@ -3,8 +3,9 @@ import { AppActionTypes } from './App.actions';
 
 // const appState = JSON.parse(localStorage.getItem('appState'));
 
-export const initialState = {
-  appTheme: localStorage.getItem('appTheme') || 'darkTheme'
+export const initialState: AppState = {
+  appTheme: localStorage.getItem('appTheme') || 'darkTheme',
+  themeChecked: false
 };
 
 export function appReducer(state: AppState, action: any): AppState {
@@ -12,7 +13,9 @@ export function appReducer(state: AppState, action: any): AppState {
     switch(action.type) {
       case AppActionTypes.toggleTheme:
         const newState = {
-          appTheme: state.appTheme === 'darkTheme' ? 'lightTheme' : 'darkTheme'
+          ...state,
+          appTheme: state.appTheme === 'darkTheme' ? 'lightTheme' : 'darkTheme',
+          themeChecked: !state.themeChecked
         };
         return newState;
       default:

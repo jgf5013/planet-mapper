@@ -5,7 +5,7 @@ import confiredExoplanets from './confirmed-explanets.json';
 import { Planet } from './Planet.interface';
 import { AXIS_OPTIONS } from './App.constants';
 import { ControlPanel } from './ControlPanel';
-import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab } from '@material-ui/core';
 import { AppStateContext } from './StateProvider';
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import Brightness3RoundedIcon from '@material-ui/icons/Brightness3Rounded';
@@ -13,6 +13,9 @@ import { AppState } from './App.interface';
 import { appReducer, initialState } from './App.reducer';
 import { AppActionTypes } from './App.actions';
 import { getThemeByName } from './themes/base';
+
+const lightTheme = getThemeByName('lightTheme');
+const darkTheme = getThemeByName('darkTheme');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +32,17 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       [theme.breakpoints.up('md')]: {
         flexDirection: 'row-reverse'
-      },
+      }
+    },
+    darkIcon: {
+      backgroundColor: darkTheme.palette.background.default,
+      borderRadius: '0.75rem',
+      padding: '5px'
+    },
+    lightIcon: {
+      backgroundColor: lightTheme.palette.background.default,
+      borderRadius: '0.75rem',
+      padding: '5px'
     }
   }),
 );
@@ -43,7 +56,6 @@ export function App(props: { theme: Theme }) {
     x: AXIS_OPTIONS[0].axes[0],
     y: AXIS_OPTIONS[1].axes[0]
   };
-  const globalState = useContext<AppState>(AppStateContext);
   const [state, dispatch] = useReducer(appReducer, initialState);
   const theme = getThemeByName(state.appTheme);
 
@@ -53,11 +65,20 @@ export function App(props: { theme: Theme }) {
       <Grid className={classes.root} container direction="column">
         <Grid item xs={12}>
           <Grid container className={classes.header} justify="space-between">
-            <Brightness3RoundedIcon color="primary" aria-label="Dark Theme"
-              onClick={() => dispatch({type: AppActionTypes.toggleTheme})}/>
-            Planet Mapper
-            <WbSunnyRoundedIcon color="secondary" aria-label="Light Theme"
-              onClick={() => dispatch({type: AppActionTypes.toggleTheme})}/>
+            <Grid item xs></Grid>
+            <Grid item xs={6}>
+              Planet Mapper
+            </Grid>
+            <Grid>
+              <Switch
+                checked={state.themeChecked}
+                onChange={() => dispatch({type: AppActionTypes.toggleTheme})}
+                icon={<Brightness3RoundedIcon aria-label="Dark Theme" className={classes.lightIcon} />}
+                checkedIcon={<WbSunnyRoundedIcon color="secondary" aria-label="Light Theme" className={classes.darkIcon} />}
+                color="primary"
+                name="themeCheck"
+                inputProps={{ 'aria-label': 'light and dark theme checkbox' }} />
+              </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12} className={classes.appWrapper}>
