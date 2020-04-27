@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -9,6 +9,8 @@ import { AxisGroup, AxisOption } from './AxisOption.interface';
 
 
 import { makeStyles, createStyles, Theme, ListSubheader, ListItem } from '@material-ui/core';
+import { controlPanelReducer, initialState } from './ControlPanel.reducer';
+import { ControlPanelActionTypes } from './ControlPanel.actions';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,12 +29,16 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-export function Axis(props: {axis: string, axisLabel: string}) {
+export function Axis(props: {stateKey: string, selectedValue: string, axisLabel: string}) {
     
-    const [axis, setAxis] = React.useState(props.axis);
+    const [state, dispatch] = useReducer(controlPanelReducer, initialState);
     
-    const handleXAxisChange = (attribute: string): void => {
-        setAxis(attribute);
+    const handleAxisChange = (attribute: string): void => {
+        dispatch({
+            type: ControlPanelActionTypes.changeAxis,
+            key: props.stateKey,
+            value: attribute
+        });
     };
     
     const renderSubList = (axisGroup: AxisGroup) => {
@@ -49,10 +55,10 @@ export function Axis(props: {axis: string, axisLabel: string}) {
             <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">{props.axisLabel}</InputLabel>
                 <Select
-                    labelId="x-axis-select-label"
-                    id="x-axis-select"
-                    value={axis}
-                    onChange={event => handleXAxisChange(event.target.value as string)}>
+                    labelId="axis-select-label"
+                    id="axis-select"
+                    value={state[props.stateKey]}
+                    onChange={event => handleAxisChange(event.target.value as string)}>
                         {AXIS_OPTIONS.map((axisGroup: AxisGroup) => ([
                         <ListSubheader key={axisGroup.category}>{axisGroup.category}</ListSubheader>,
                         [...renderSubList(axisGroup)]
