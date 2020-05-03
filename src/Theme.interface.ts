@@ -1,4 +1,4 @@
-export interface AppState {
+export interface ThemeState {
     appTheme: string;
     themeChecked: boolean;
 }

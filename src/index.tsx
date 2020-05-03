@@ -4,12 +4,19 @@ import { CssBaseline } from '@material-ui/core';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { StateProvider } from './StateProvider';
+import { StateProvider, AppStateContext } from './StateProvider';
+
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+
+import { appReducer } from './App.reducer';
+
+const store = createStore(appReducer)
 
 ReactDOM.render(
-    <StateProvider>
+    <Provider store={store}>
       <App />
-    </StateProvider>,
+    </Provider>,
   document.getElementById('root')
 );
 

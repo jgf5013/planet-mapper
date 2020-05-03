@@ -9,14 +9,17 @@ export const initialState: ControlPanelState = {
 };
 
 export function controlPanelReducer(state: ControlPanelState, action: any): ControlPanelState {
+  console.log('controlPanelReducer: ', state, action);
     switch(action.type) {
       case ControlPanelActionTypes.changeAxis:
         const newState = {
           ...state,
         };
         newState[action.key] = action.value;
+        console.log('controlPanelReducer: ', state, newState);
         return newState;
       default:
-        throw new Error();
+        return state;
+        // throw new Error();
     };
 }

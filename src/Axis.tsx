@@ -9,29 +9,31 @@ import { AxisGroup, AxisOption } from './AxisOption.interface';
 
 
 import { makeStyles, createStyles, Theme, ListSubheader, ListItem } from '@material-ui/core';
-import { controlPanelReducer, initialState } from './ControlPanel.reducer';
+import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
 import { ControlPanelActionTypes } from './ControlPanel.actions';
+// import { appReducer } from './App.reducer';
 
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-    root: {
-        flexGrow: 1
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
+        root: {
+            flexGrow: 1
+        },
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: 120,
+        },
+        selectEmpty: {
+            marginTop: theme.spacing(2),
+        },
     }),
 );
 
 
 export function Axis(props: {stateKey: string, selectedValue: string, axisLabel: string}) {
     
-    const [state, dispatch] = useReducer(controlPanelReducer, initialState);
+    // const [state, dispatch] = useReducer(appReducer, initialState);
+    const [state, dispatch] = useReducer(controlPanelReducer, initialControlPanelState);
     
     const handleAxisChange = (attribute: string): void => {
         dispatch({

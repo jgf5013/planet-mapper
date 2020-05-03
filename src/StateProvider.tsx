@@ -1,20 +1,25 @@
 import React, { useState, createContext, useReducer, FunctionComponent, ReactNode, useContext } from 'react';
 import { MuiThemeProvider } from '@material-ui/core';
 import { getThemeByName } from './themes/base';
-import { AppState } from './App.interface';
+import { ThemeState } from './Theme.interface';
+// import { themeReducer, initialState } from './Theme.reducer';
 import { appReducer, initialState } from './App.reducer';
 
-const AppStateContext = createContext<AppState>(initialState);
+
+const AppStateContext = createContext<any>(initialState);
+
 
 
 const StateProvider = ({ children }: { children: ReactNode }) => {
-    
-  const [state, dispatch] = useReducer(appReducer, initialState);
 
-  console.log(state);
+    
+    // const [state, dispatch] = useReducer(themeReducer, initialState);
+    const [state, dispatch] = useReducer(appReducer, initialState);
+
+    console.log('StateProvider...', state);
 
     return (
-        <AppStateContext.Provider value={state}>
+        <AppStateContext.Provider value={{state, dispatch}}>
             {children}
         </AppStateContext.Provider>
     );

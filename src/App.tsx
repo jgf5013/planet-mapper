@@ -9,10 +9,12 @@ import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThe
 import { AppStateContext } from './StateProvider';
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import Brightness3RoundedIcon from '@material-ui/icons/Brightness3Rounded';
-import { AppState } from './App.interface';
-import { appReducer, initialState } from './App.reducer';
-import { AppActionTypes } from './App.actions';
+import { ThemeState } from './Theme.interface';
+import { themeReducer, initialState as initialThemeState } from './Theme.reducer';
+import { ThemeActionTypes } from './Theme.actions';
 import { getThemeByName } from './themes/base';
+// import { appReducer, initialState } from './App.reducer';
+import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
 
 const lightTheme = getThemeByName('lightTheme');
 const darkTheme = getThemeByName('darkTheme');
@@ -56,35 +58,42 @@ export function App(props: { theme: Theme }) {
     x: AXIS_OPTIONS[0].axes[0],
     y: AXIS_OPTIONS[1].axes[0]
   };
-  const [state, dispatch] = useReducer(appReducer, initialState);
-  const theme = getThemeByName(state.appTheme);
+  // const [state, dispatch] = useReducer(appReducer, initialState);
+  const [themeState, themeDispatch] = useReducer(themeReducer, initialThemeState);
+  const theme = getThemeByName(themeState.appTheme);
+  const [controlPanelState, controlDispatch] =  useReducer(controlPanelReducer, initialControlPanelState);
+
+  const { controlState } = useContext(AppStateContext);
+
+  // console.log('App state: ', state);
+  console.log('controlPanelState: ', controlPanelState);
+  console.log('controlState: ', controlState);
 
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Grid className={classes.root} container direction="column">
-        <Grid item xs={12}>
-          <Grid container className={classes.header} justify="space-between">
-            <Grid item xs></Grid>
-            <Grid item xs={6}>
-              Planet Mapper
-            </Grid>
-            <Grid>
-              <Switch
-                checked={state.themeChecked}
-                onChange={() => dispatch({type: AppActionTypes.toggleTheme})}
-                icon={<Brightness3RoundedIcon aria-label="Dark Theme" className={classes.lightIcon} />}
-                checkedIcon={<WbSunnyRoundedIcon color="secondary" aria-label="Light Theme" className={classes.darkIcon} />}
-                color="primary"
-                name="themeCheck"
-                inputProps={{ 'aria-label': 'light and dark theme checkbox' }} />
-              </Grid>
+      <Grid item xs={12}>
+        <Grid container className={classes.header} justify="space-between">
+          <Grid item xs={6}>
+            Planet Mapper
           </Grid>
+          <Grid>
+            <Switch
+              checked={themeState.themeChecked}
+              onChange={() => themeDispatch({type: ThemeActionTypes.toggleTheme})}
+              icon={<Brightness3RoundedIcon aria-label="Dark Theme" className={classes.lightIcon} />}
+              checkedIcon={<WbSunnyRoundedIcon color="secondary" aria-label="Light Theme" className={classes.darkIcon} />}
+              color="primary"
+              name="themeCheck"
+              inputProps={{ 'aria-label': 'light and dark theme checkbox' }} />
+            </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.appWrapper}>
-            <ControlPanel />
-            <PlanetChart planets={confiredExoplanets} axisProps={axisProps} theme={theme} />
-        </Grid>
+      </Grid>
+      <Grid item xs={12} className={classes.appWrapper}>
+          <ControlPanel />
+          <PlanetChart planets={confiredExoplanets} axisProps={axisProps} theme={theme} />
+      </Grid>
       </Grid>
     </MuiThemeProvider>
   );
