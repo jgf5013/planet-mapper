@@ -3,7 +3,7 @@ import PlanetChart from './PlanetChart';
 
 import confiredExoplanets from './confirmed-explanets.json';
 import { Planet } from './Planet.interface';
-import { AXIS_OPTIONS } from './App.constants';
+import { AXIS_GROUPS } from './App.constants';
 import { ControlPanel } from './ControlPanel';
 import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab } from '@material-ui/core';
 import { AppStateContext } from './StateProvider';
@@ -54,20 +54,9 @@ export function App(props: { theme: Theme }) {
 
   const classes = useStyles();
 
-  const axisProps = {
-    x: AXIS_OPTIONS[0].axes[0],
-    y: AXIS_OPTIONS[1].axes[0]
-  };
   // const [state, dispatch] = useReducer(appReducer, initialState);
   const [themeState, themeDispatch] = useReducer(themeReducer, initialThemeState);
   const theme = getThemeByName(themeState.appTheme);
-  const [controlPanelState, controlDispatch] =  useReducer(controlPanelReducer, initialControlPanelState);
-
-  const { controlState } = useContext(AppStateContext);
-
-  // console.log('App state: ', state);
-  console.log('controlPanelState: ', controlPanelState);
-  console.log('controlState: ', controlState);
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -92,7 +81,7 @@ export function App(props: { theme: Theme }) {
       </Grid>
       <Grid item xs={12} className={classes.appWrapper}>
           <ControlPanel />
-          <PlanetChart planets={confiredExoplanets} axisProps={axisProps} theme={theme} />
+          <PlanetChart planets={confiredExoplanets} theme={theme} />
       </Grid>
       </Grid>
     </MuiThemeProvider>

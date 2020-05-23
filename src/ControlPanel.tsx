@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { makeStyles, createStyles, Theme, ListSubheader, ListItem, Grid } from '@material-ui/core';
-import { AXIS_OPTIONS } from './App.constants';
-import { Axis } from './Axis';
+import { AXIS_GROUPS } from './App.constants';
+import Axis from './Axis';
 import { initialState } from './ControlPanel.reducer';
 
 
@@ -26,7 +26,7 @@ export function ControlPanel() {
 
 
   const classes = useStyles();
-  if (!AXIS_OPTIONS) return null;
+  if (!AXIS_GROUPS) return null;
   return (
     <Grid container className={classes.root} justify="space-between">
       <Axis stateKey="xAxis" selectedValue={initialState.xAxis} axisLabel={'X Axis'}/>

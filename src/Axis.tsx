@@ -1,16 +1,18 @@
 import React, { useReducer } from 'react';
+import { connect } from 'react-redux';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-import { AXIS_OPTIONS } from './App.constants';
+import { AXIS_GROUPS } from './App.constants';
 import { AxisGroup, AxisOption } from './AxisOption.interface';
 
 
 import { makeStyles, createStyles, Theme, ListSubheader, ListItem } from '@material-ui/core';
 import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
 import { ControlPanelActionTypes } from './ControlPanel.actions';
+import { ControlPanelState } from './ControlPanel.interface';
 // import { appReducer } from './App.reducer';
 
 
@@ -29,19 +31,21 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+// interface ControlPanelProps {
+//     axisLabel: string;
+//     selectedValue: string;
+//     stateKey: string;
+// }
 
-export function Axis(props: {stateKey: string, selectedValue: string, axisLabel: string}) {
-    
-    // const [state, dispatch] = useReducer(appReducer, initialState);
-    const [state, dispatch] = useReducer(controlPanelReducer, initialControlPanelState);
-    
-    const handleAxisChange = (attribute: string): void => {
-        dispatch({
-            type: ControlPanelActionTypes.changeAxis,
-            key: props.stateKey,
-            value: attribute
-        });
-    };
+interface ConnectedControlPanelProps {
+    axisLabel: string;
+    controlPanel: ControlPanelState;
+    handleAxisChange: Function;
+    selectedValue: string;
+    stateKey: string;
+}
+
+const Axis:React.FC<ConnectedControlPanelProps> = (props) => {
     
     const renderSubList = (axisGroup: AxisGroup) => {
         if(!axisGroup) { return []; }
@@ -59,9 +63,9 @@ export function Axis(props: {stateKey: string, selectedValue: string, axisLabel:
                 <Select
                     labelId="axis-select-label"
                     id="axis-select"
-                    value={state[props.stateKey]}
-                    onChange={event => handleAxisChange(event.target.value as string)}>
-                        {AXIS_OPTIONS.map((axisGroup: AxisGroup) => ([
+                    value={props.controlPanel[props.stateKey]}
+                    onChange={event => props.handleAxisChange(event.target.value as string)}>
+                        {AXIS_GROUPS.map((axisGroup: AxisGroup) => ([
                         <ListSubheader key={axisGroup.category}>{axisGroup.category}</ListSubheader>,
                         [...renderSubList(axisGroup)]
                         ])
@@ -71,3 +75,21 @@ export function Axis(props: {stateKey: string, selectedValue: string, axisLabel:
         </div>
     );
 }
+
+const mapStateToProps = (state: ControlPanelState, props: any) => ({
+    ...state,
+    ...props    
+});
+
+const mapDispatchToProps = (dispatch: Function, props: any) => ({
+    handleAxisChange: (attribute: string): void => { 
+        dispatch({
+            type: ControlPanelActionTypes.changeAxis,
+            key: props.stateKey,
+            value: attribute
+        });
+    }
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Axis);

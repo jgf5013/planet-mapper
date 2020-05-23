@@ -5,13 +5,18 @@ import HighchartsReact from 'highcharts-react-official';
 
 import { Planet } from './Planet.interface';
 import { AxisOption } from './AxisOption.interface';
-import { withTheme, Theme } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { ControlPanelState } from './ControlPanel.interface';
+import { connect } from 'react-redux';
+import { getLabelFromKey } from './Axis.service';
+
 interface PlanetProps {
   theme: Theme,
   planets: Planet [],
   axisProps: {
     x: AxisOption, y: AxisOption
-  }
+  },
+  controlPanel: ControlPanelState
 };
 
 export class PlanetChart extends React.Component<PlanetProps> {
@@ -21,27 +26,13 @@ export class PlanetChart extends React.Component<PlanetProps> {
 
   constructor(props: PlanetProps) {
     super(props);
-    this.afterChartCreated = this.afterChartCreated.bind(this);
-  }
 
-  componentDidMount() {
-    console.log('props: ', this.props);
-    this.internalChart.addSeries({
-      type: 'scatter',
-      name: 'Confirmed Planets',
-      data: this.props.planets.map((p) => {
-        const x: number = Number(p[this.props.axisProps.x.attribute]);
-        const y: number = Number(p[this.props.axisProps.y.attribute]);
-        return [x, y];
-      })
-    });
-  }
-
-  afterChartCreated(chart: Highcharts.Chart) {
-    this.internalChart = chart;
   }
   
   render() {
+    console.log('theme: ', this.props.theme);
+    const xAxis: AxisOption = getLabelFromKey(this.props.controlPanel.xAxis);
+    const yAxis: AxisOption = getLabelFromKey(this.props.controlPanel.yAxis);
     this.chartOptions = {
       chart: {
         type: 'scatter',
@@ -49,18 +40,18 @@ export class PlanetChart extends React.Component<PlanetProps> {
       },
       legend: {
         itemStyle: {
-          color: this.props.theme.palette.primary.contrastText
+          color: this.props.theme.palette.text.primary
         }
       },
       title: {
-        text: `${this.props.axisProps.x.label} vs ${this.props.axisProps.y.label}`,
+        text: `${xAxis.label} vs ${yAxis.label}`,
         style: {
-          color: this.props.theme.palette.primary.contrastText
+          color: this.props.theme.palette.text.primary
         },
         margin: 25
       },
       subtitle: {
-        text: `<a style="color: ${this.props.theme.palette.primary.contrastText}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
+        text: `<a style="color: ${this.props.theme.palette.text.primary}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
         useHTML: true,
       },
       plotOptions: {
@@ -75,25 +66,41 @@ export class PlanetChart extends React.Component<PlanetProps> {
           },
           tooltip: {
             headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: `{point.x} ${this.props.axisProps.x.units}, {point.y} ${this.props.axisProps.y.units}`
+            pointFormat: `{point.x} ${xAxis.units}, {point.y} ${yAxis.units}`
           }
         }
-      }
+      },
+      series: [{
+        type: 'scatter',
+        name: 'Confirmed Planets',
+        data: this.props.planets
+          .filter(p => p[xAxis.attribute] && p[yAxis.attribute]) //filters out null values
+          .map((p) => {
+          const x: number = Number(p[xAxis.attribute]);
+          const y: number = Number(p[yAxis.attribute]);
+          return [x, y];
+        })
+      }]
     };
-    console.log(this.props.theme);
+    console.log('PlanetChart - props: ', this.props);
     return (
       <div>
         <HighchartsReact
           highcharts={Highcharts}
-          options={this.chartOptions}
-          callback={ this.afterChartCreated }/>
+          options={this.chartOptions}/>
       </div>
     );
   }
 
 }
 
-// export default withTheme(PlanetChart);
-export default PlanetChart;
  
  
+const mapStateToProps = (state: ControlPanelState, props: any) => ({
+  ...state,
+  ...props
+});
+
+
+
+export default connect(mapStateToProps)(PlanetChart)

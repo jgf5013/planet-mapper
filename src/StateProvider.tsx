@@ -16,8 +16,6 @@ const StateProvider = ({ children }: { children: ReactNode }) => {
     // const [state, dispatch] = useReducer(themeReducer, initialState);
     const [state, dispatch] = useReducer(appReducer, initialState);
 
-    console.log('StateProvider...', state);
-
     return (
         <AppStateContext.Provider value={{state, dispatch}}>
             {children}
