@@ -8,7 +8,7 @@ import { AxisOption } from './AxisOption.interface';
 import { Theme } from '@material-ui/core';
 import { ControlPanelState } from './ControlPanel.interface';
 import { connect } from 'react-redux';
-import { getLabelFromKey } from './Axis.service';
+import { getLabelFromKey, getCategories } from './Axis.service';
 
 interface PlanetProps {
   theme: Theme,
@@ -30,9 +30,10 @@ export class PlanetChart extends React.Component<PlanetProps> {
   }
   
   render() {
-    console.log('theme: ', this.props.theme);
     const xAxis: AxisOption = getLabelFromKey(this.props.controlPanel.xAxis);
     const yAxis: AxisOption = getLabelFromKey(this.props.controlPanel.yAxis);
+    const selectedColorCategory: string = this.props.controlPanel.colorCategory;
+    const colorCategories: string[] = getCategories(this.props.planets, selectedColorCategory);
     this.chartOptions = {
       chart: {
         type: 'scatter',
@@ -43,17 +44,17 @@ export class PlanetChart extends React.Component<PlanetProps> {
           color: this.props.theme.palette.text.primary
         }
       },
-      title: {
-        text: `${xAxis.label} vs ${yAxis.label}`,
-        style: {
-          color: this.props.theme.palette.text.primary
-        },
-        margin: 25
-      },
-      subtitle: {
-        text: `<a style="color: ${this.props.theme.palette.text.primary}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
-        useHTML: true,
-      },
+      // title: {
+      //   text: `${xAxis.label} vs ${yAxis.label}`,
+      //   style: {
+      //     color: this.props.theme.palette.text.primary
+      //   },
+      //   margin: 25
+      // },
+      // subtitle: {
+      //   text: `<a style="color: ${this.props.theme.palette.text.primary}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
+      //   useHTML: true,
+      // },
       plotOptions: {
         scatter: {
           marker: {
@@ -70,19 +71,21 @@ export class PlanetChart extends React.Component<PlanetProps> {
           }
         }
       },
-      series: [{
-        type: 'scatter',
-        name: 'Confirmed Planets',
-        data: this.props.planets
-          .filter(p => p[xAxis.attribute] && p[yAxis.attribute]) //filters out null values
-          .map((p) => {
-          const x: number = Number(p[xAxis.attribute]);
-          const y: number = Number(p[yAxis.attribute]);
-          return [x, y];
-        })
-      }]
+      series: colorCategories.map((colorCategory) => {
+        return {
+          type: 'scatter',
+          name: colorCategory,
+          data: this.props.planets
+            .filter(p => p[xAxis.attribute] && p[yAxis.attribute]) //filters out null values
+            .filter(p => p[selectedColorCategory] === colorCategory)
+            .map((p) => {
+              const x: number = Number(p[xAxis.attribute]);
+              const y: number = Number(p[yAxis.attribute]);
+              return [x, y];
+            })
+        };
+      })
     };
-    console.log('PlanetChart - props: ', this.props);
     return (
       <div>
         <HighchartsReact

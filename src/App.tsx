@@ -5,7 +5,7 @@ import confiredExoplanets from './confirmed-explanets.json';
 import { Planet } from './Planet.interface';
 import { AXIS_GROUPS } from './App.constants';
 import { ControlPanel } from './ControlPanel';
-import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab, Box } from '@material-ui/core';
 import { AppStateContext } from './StateProvider';
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import Brightness3RoundedIcon from '@material-ui/icons/Brightness3Rounded';
@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
     header: {
       minHeight: '10vh'
     },
+    headerName: {
+      padding: '1vh'
+    },
     appWrapper: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -35,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         flexDirection: 'row-reverse'
       }
+    },
+    boxItem: {
+      margin: '2vw'
     },
     darkIcon: {
       backgroundColor: darkTheme.palette.background.default,
@@ -64,7 +70,8 @@ export function App(props: { theme: Theme }) {
       <Grid className={classes.root} container direction="column">
       <Grid item xs={12}>
         <Grid container className={classes.header} justify="space-between">
-          <Grid item xs={6}>
+          {/* <Grid>just a spacer</Grid> */}
+          <Grid className={classes.headerName} item xs={6}>
             Planet Mapper
           </Grid>
           <Grid>
@@ -79,10 +86,10 @@ export function App(props: { theme: Theme }) {
             </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} className={classes.appWrapper}>
-          <ControlPanel />
-          <PlanetChart planets={confiredExoplanets} theme={theme} />
-      </Grid>
+      <Box className={classes.appWrapper}>
+          <Box className={classes.boxItem}><ControlPanel /></Box>
+          <Box className={classes.boxItem} flexGrow={1}><PlanetChart planets={confiredExoplanets} theme={theme} /></Box>
+      </Box>
       </Grid>
     </MuiThemeProvider>
   );

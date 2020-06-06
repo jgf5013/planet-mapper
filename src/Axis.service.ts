@@ -1,5 +1,6 @@
 import { AXIS_GROUPS } from './App.constants';
 import { AxisOption, AxisGroup } from './AxisOption.interface';
+import { Planet } from './Planet.interface';
 
 export function getLabelFromKey (axisAttribute: string):AxisOption  {
     let matchingAxis: AxisOption[] = [];
@@ -13,4 +14,9 @@ export function getLabelFromKey (axisAttribute: string):AxisOption  {
     });
     return matchingAxis[0];
 
+}
+
+export function getCategories(planets: Planet[], axisAttribute: string): string[] {
+    return planets.map(p => p[axisAttribute])
+        .filter((value, index, self) => self.indexOf(value) === index);
 }

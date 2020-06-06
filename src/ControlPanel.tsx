@@ -8,7 +8,10 @@ import { initialState } from './ControlPanel.reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    root: {},
+    elementContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
     },
     formControl: {
       margin: theme.spacing(1),
@@ -29,8 +32,13 @@ export function ControlPanel() {
   if (!AXIS_GROUPS) return null;
   return (
     <Grid container className={classes.root} justify="space-between">
-      <Axis stateKey="xAxis" selectedValue={initialState.xAxis} axisLabel={'X Axis'}/>
-      <Axis stateKey="yAxis" selectedValue={initialState.yAxis} axisLabel={'Y Axis'}/>
+      <Grid container className={classes.elementContainer} direction="column" justify="space-between">
+        <Axis type="Categorical" stateKey="colorCategory" selectedValue={initialState.colorCategory} axisLabel={'Color'}/>
+      </Grid>
+      <Grid container className={classes.elementContainer} direction="column" justify="space-between">
+        <Axis type="Numeric" stateKey="xAxis" selectedValue={initialState.xAxis} axisLabel={'X Axis'}/>
+        <Axis type="Numeric" stateKey="yAxis" selectedValue={initialState.yAxis} axisLabel={'Y Axis'}/>
+      </Grid>
     </Grid>
   );
 

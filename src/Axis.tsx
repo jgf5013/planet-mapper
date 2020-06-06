@@ -43,15 +43,18 @@ interface ConnectedControlPanelProps {
     handleAxisChange: Function;
     selectedValue: string;
     stateKey: string;
+    type: string;
 }
 
 const Axis:React.FC<ConnectedControlPanelProps> = (props) => {
     
-    const renderSubList = (axisGroup: AxisGroup) => {
+    const renderSubList = (axisGroup: AxisGroup, type: string) => {
         if(!axisGroup) { return []; }
-        const menuItems = axisGroup.axes.map((axis: AxisOption) => (
-            <MenuItem key={`${axisGroup.category}-${axis.attribute}`} value={axis.attribute}>{axis.label}</MenuItem>
-        ));
+        const menuItems = axisGroup.axes
+            .filter((axis: AxisOption) => (axis.type === type))
+            .map((axis: AxisOption) => (
+                <MenuItem key={`${axisGroup.category}-${axis.attribute}`} value={axis.attribute}>{axis.label}</MenuItem>
+            ));
         return menuItems;
     };
 
@@ -67,7 +70,7 @@ const Axis:React.FC<ConnectedControlPanelProps> = (props) => {
                     onChange={event => props.handleAxisChange(event.target.value as string)}>
                         {AXIS_GROUPS.map((axisGroup: AxisGroup) => ([
                         <ListSubheader key={axisGroup.category}>{axisGroup.category}</ListSubheader>,
-                        [...renderSubList(axisGroup)]
+                        [...renderSubList(axisGroup, props.type)]
                         ])
                 )}
                 </Select>

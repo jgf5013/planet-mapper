@@ -6,74 +6,104 @@ export const AXIS_GROUPS: AxisGroup[] = [
         axes: [{
             label: "Planet's Mass",
             attribute: "pl_bmassj",
-            units: "Jupiter Masses"
+            units: "Jupiter Masses",
+            type: "Numeric"
         }, {
             label: "Planet's Radius",
             attribute: "pl_radj",
-            units: "Jupiter Radii"
+            units: "Jupiter Radii",
+            type: "Numeric"
         }, {
             label: "Planet's Density",
             attribute: "pl_dens",
-            units: "g/cm³"
+            units: "g/cm³",
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Eccentricity",
             attribute: "pl_orbeccen",
-            units: null
+            units: null,
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Inclination",
             attribute: "pl_orbincl",
-            units: null
+            units: null,
+            type: "Numeric"
         }, {
             label: "Number of Planets in System",
             attribute: "pl_pnum",
-            units: null
+            units: null,
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Period",
             attribute: "pl_orbper",
-            units: "Days"
+            units: "Days",
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Period Error 1",
             attribute: "pl_orbpererr1",
-            units: "Days"
+            units: "Days",
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Period Error 2",
             attribute: "pl_orbpererr2",
-            units: "Days"
+            units: "Days",
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Period Limit Flag",
             attribute: "pl_orbperlim",
-            units: null
+            units: null,
+            type: "Numeric"
         }, {
             label: "Planet's Orbital Period # of Measurements",
             attribute: "pl_orbpern",
-            units: null
+            units: null,
+            type: "Numeric"
         }]
     }, {
         category: "Star",
         axes: [{
             label: "Stellar Distance",
             attribute: "st_dist",
-            units: "Light Years"
+            units: "Light Years",
+            type: "Numeric"
         }, {
             label: "Stellar Mass",
             attribute: "st_mass",
-            units: "Solar Masses"
+            units: "Solar Masses",
+            type: "Numeric"
         }, {
             label: "Stellar Radius",
             attribute: "st_rad",
-            units: "Solar Radii"
+            units: "Solar Radii",
+            type: "Numeric"
         }, {
             label: "Stellar Optical Magnitude",
             attribute: "st_optmag",
-            units: "mag"
+            units: "mag",
+            type: "Numeric"
         }, {
             label: "Right Ascension",
             attribute: "ra",
-            units: null
+            units: null,
+            type: "Numeric"
         }, {
             label: "Declination",
             attribute: "dec",
-            units: null
+            units: null,
+            type: "Numeric"
+        }]
+    }, {
+        category: "Discovery",
+        axes: [{
+            label: "Satellite/Observatory",
+            attribute: "pl_facility",
+            units: null,
+            type: "Categorical"
+        }, {
+            label: "Discovery Year",
+            attribute: "rowupdate", // TODO: Not sure if this is right
+            units: null,
+            type: "Numeric"
         }]
     }
 ];
