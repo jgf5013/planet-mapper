@@ -11,7 +11,7 @@ import { createStore } from 'redux';
 
 import { appReducer } from './App.reducer';
 
-const store = createStore(appReducer)
+const store = createStore(appReducer);
 
 ReactDOM.render(
     <Provider store={store}>

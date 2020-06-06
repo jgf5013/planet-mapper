@@ -42,7 +42,8 @@ export class PlanetChart extends React.Component<PlanetProps> {
       legend: {
         itemStyle: {
           color: this.props.theme.palette.text.primary
-        }
+        },
+        maxHeight: 100
       },
       // title: {
       //   text: `${xAxis.label} vs ${yAxis.label}`,

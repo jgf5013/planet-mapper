@@ -81,5 +81,6 @@ export interface Planet {
         pl_nnotes: number | null;
         rowupdate: string;
         pl_facility: string;
+        mpl_publ_date?: string;
 }
 

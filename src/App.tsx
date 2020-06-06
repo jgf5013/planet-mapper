@@ -1,11 +1,10 @@
-import React, { useState, useContext, useReducer } from 'react';
+import React, { useState, useContext, useReducer, useEffect } from 'react';
 import PlanetChart from './PlanetChart';
 
-import confiredExoplanets from './confirmed-explanets.json';
 import { Planet } from './Planet.interface';
 import { AXIS_GROUPS } from './App.constants';
 import { ControlPanel } from './ControlPanel';
-import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab, Box } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab, Box, Slider } from '@material-ui/core';
 import { AppStateContext } from './StateProvider';
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import Brightness3RoundedIcon from '@material-ui/icons/Brightness3Rounded';
@@ -15,6 +14,8 @@ import { ThemeActionTypes } from './Theme.actions';
 import { getThemeByName } from './themes/base';
 // import { appReducer, initialState } from './App.reducer';
 import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
+import TimelineSlider from './TimelineSlider';
+import { getPublicationDateRange, fetchPlanets } from './Planet.service';
 
 const lightTheme = getThemeByName('lightTheme');
 const darkTheme = getThemeByName('darkTheme');
@@ -63,7 +64,15 @@ export function App(props: { theme: Theme }) {
   // const [state, dispatch] = useReducer(appReducer, initialState);
   const [themeState, themeDispatch] = useReducer(themeReducer, initialThemeState);
   const theme = getThemeByName(themeState.appTheme);
+  const [planets, setPlanets] = useState<Planet[]>([]);
 
+  useEffect(() => {
+    fetchPlanets().then((planets: Planet[]) => {
+      console.log('Planet 01: ', planets[0]);
+      setPlanets(planets);
+      // const yearRange = getPublicationDateRange(planets);
+    });
+  }, []);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
@@ -88,7 +97,10 @@ export function App(props: { theme: Theme }) {
       </Grid>
       <Box className={classes.appWrapper}>
           <Box className={classes.boxItem}><ControlPanel /></Box>
-          <Box className={classes.boxItem} flexGrow={1}><PlanetChart planets={confiredExoplanets} theme={theme} /></Box>
+          <Box className={classes.boxItem} flexGrow={1}>
+            {planets.length && <PlanetChart planets={planets} theme={theme} />}
+            <TimelineSlider />
+          </Box>
       </Box>
       </Grid>
     </MuiThemeProvider>
