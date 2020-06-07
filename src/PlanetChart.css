@@ -1,0 +1,3 @@
+:global(.highcharts-legend) {
+    min-height: 100px;
+}

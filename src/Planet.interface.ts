@@ -80,7 +80,7 @@ export interface Planet {
         st_radn: number | null;
         pl_nnotes: number | null;
         rowupdate: string;
-        pl_facility: string;
-        mpl_publ_date?: string;
+        pl_facility: string | null;
+        pl_publ_date?: string | null;
 }
 

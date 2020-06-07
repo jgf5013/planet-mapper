@@ -3,7 +3,7 @@ import { TimelineSliderState } from './TimelineSlider.interface';
 
 
 export const initialState: TimelineSliderState = {
-  date: new Date(1990, 0, 1) //TODO: pull it dynamically based off of data (minus 15 years?)
+  date: new Date()
 };
 
 export function timelineSliderReducer(state: TimelineSliderState = initialState, action: any): TimelineSliderState {
@@ -16,6 +16,11 @@ export function timelineSliderReducer(state: TimelineSliderState = initialState,
           date: newDate
         };
         return newState;
+      case TimelineSliderActionTypes.set:
+        return {
+          ...state,
+          date: action.value
+        };
       default:
         return state;
         // throw new Error();

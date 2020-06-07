@@ -15,7 +15,7 @@ import { getThemeByName } from './themes/base';
 // import { appReducer, initialState } from './App.reducer';
 import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
 import TimelineSlider from './TimelineSlider';
-import { getPublicationDateRange, fetchPlanets } from './Planet.service';
+import { getPublicationDateRange, fetchPlanets, getDistinctPublicationDate } from './Planet.service';
 
 const lightTheme = getThemeByName('lightTheme');
 const darkTheme = getThemeByName('darkTheme');
@@ -65,12 +65,13 @@ export function App(props: { theme: Theme }) {
   const [themeState, themeDispatch] = useReducer(themeReducer, initialThemeState);
   const theme = getThemeByName(themeState.appTheme);
   const [planets, setPlanets] = useState<Planet[]>([]);
+  const [publicationDates, setPublicationDates] = useState<string[]|null>();
 
   useEffect(() => {
     fetchPlanets().then((planets: Planet[]) => {
-      console.log('Planet 01: ', planets[0]);
       setPlanets(planets);
-      // const yearRange = getPublicationDateRange(planets);
+      const publicationDates = getDistinctPublicationDate(planets);
+      setPublicationDates(publicationDates);
     });
   }, []);
   return (
@@ -99,7 +100,7 @@ export function App(props: { theme: Theme }) {
           <Box className={classes.boxItem}><ControlPanel /></Box>
           <Box className={classes.boxItem} flexGrow={1}>
             {planets.length && <PlanetChart planets={planets} theme={theme} />}
-            <TimelineSlider />
+            <TimelineSlider publicationDates={publicationDates} />
           </Box>
       </Box>
       </Grid>

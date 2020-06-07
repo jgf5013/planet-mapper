@@ -11,6 +11,8 @@ import { createStore } from 'redux';
 
 import { appReducer } from './App.reducer';
 
+import './PlanetChart.css';
+
 const store = createStore(appReducer);
 
 ReactDOM.render(

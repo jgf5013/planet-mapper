@@ -1,12 +1,5 @@
 import React, { useReducer } from 'react';
 import { connect } from 'react-redux';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-import { AXIS_GROUPS } from './App.constants';
-import { AxisGroup, AxisOption } from './AxisOption.interface';
 
 
 import { makeStyles, createStyles, Theme, ListSubheader, ListItem, Slider } from '@material-ui/core';
@@ -25,6 +18,8 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ConnectedTimelineSliderProps {
     timelineSlider: TimelineSliderState;
     tick: Function;
+    sliderValueChange: Function;
+    publicationDates: string[];
 }
 
 
@@ -35,17 +30,33 @@ const TimelineSlider:React.FC<ConnectedTimelineSliderProps> = (props) => {
             props.tick()
         }, 1000);
     }, []);
-    console.log('timelineSlider: ', props.timelineSlider);
-
     const classes = useStyles();
+
+    if(!props.publicationDates || !props.publicationDates.length) {
+        return (null);
+    }
+
+    const minPublicationDate = props.publicationDates[0];
+    const maxPublicationDate = props.publicationDates[props.publicationDates.length - 1];
     return (
         <div className={classes.root}>
             <Slider
-                defaultValue={80}
                 aria-labelledby="discrete-slider-always"
-                step={1}
-                marks={[{value: 2010}, {value: 2011}]}
-                valueLabelDisplay="on"
+                min={new Date(minPublicationDate).getTime()}
+                max={new Date(maxPublicationDate).getTime()}
+                defaultValue={new Date(maxPublicationDate).getTime()}
+                marks={[{
+                    value: new Date(minPublicationDate).getTime(),
+                    label: minPublicationDate
+                }, {
+                    value: new Date(maxPublicationDate).getTime(),
+                    label: maxPublicationDate
+                }]}
+                valueLabelFormat={(date) => {
+                    return new Date(date).toISOString().slice(0, 10);
+                }}
+                onChange={(event, value) => props.sliderValueChange(value)}
+                // valueLabelDisplay="on"
             />
         </div>
     );
@@ -61,6 +72,12 @@ const mapDispatchToProps = (dispatch: Function, props: any) => ({
         dispatch({
             type: TimelineSliderActionTypes.tick
         });
+    },
+    sliderValueChange: (d: number): void => {
+        dispatch({
+            type: TimelineSliderActionTypes.set,
+            value: new Date(d)
+        })
     }
 });
 
