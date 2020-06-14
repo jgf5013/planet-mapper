@@ -1,21 +1,23 @@
-import React, { useState, useContext, useReducer, useEffect } from 'react';
-import PlanetChart from './PlanetChart';
-
-import { Planet } from './Planet.interface';
-import { AXIS_GROUPS } from './App.constants';
-import { ControlPanel } from './ControlPanel';
-import { makeStyles, createStyles, Theme, Grid, withTheme, Paper, Button, MuiThemeProvider, CssBaseline, Switch, Fab, Box, Slider } from '@material-ui/core';
-import { AppStateContext } from './StateProvider';
-import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
+import { Box, createStyles, CssBaseline, Grid, makeStyles, MuiThemeProvider, Switch, Theme, withTheme } from '@material-ui/core';
 import Brightness3RoundedIcon from '@material-ui/icons/Brightness3Rounded';
-import { ThemeState } from './Theme.interface';
-import { themeReducer, initialState as initialThemeState } from './Theme.reducer';
+import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
+import React, { useEffect, useReducer } from 'react';
+import { connect } from 'react-redux';
+import { AppActionTypes } from './App.actions';
+import { AppState } from './App.interface';
+import { appReducer, initialAppState } from './App.reducer';
+import ControlPanel from './ControlPanel';
+import { ControlPanelState } from './ControlPanel.interface';
+import { Planet } from './Planet.interface';
+import { fetchPlanets, getDistinctPublicationDate } from './Planet.service';
+import PlanetChart from './PlanetChart';
 import { ThemeActionTypes } from './Theme.actions';
+import { ThemeState } from './Theme.interface';
+import { initialState as initialThemeState, themeReducer } from './Theme.reducer';
 import { getThemeByName } from './themes/base';
-// import { appReducer, initialState } from './App.reducer';
-import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
 import TimelineSlider from './TimelineSlider';
-import { getPublicationDateRange, fetchPlanets, getDistinctPublicationDate } from './Planet.service';
+import { TimelineSliderState } from './TimelineSlider.interface';
+
 
 const lightTheme = getThemeByName('lightTheme');
 const darkTheme = getThemeByName('darkTheme');
@@ -55,23 +57,28 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }),
 );
+interface ConnectedAppProps {
+  app: AppState,
+  theme: ThemeState,
+  controlPanel: ControlPanelState,
+  timelineSlider: TimelineSliderState
+}
 
+const App:React.FC<ConnectedAppProps> = (props) => {
 
-export function App(props: { theme: Theme }) {
+  console.log('App props: ', props);
 
   const classes = useStyles();
 
-  // const [state, dispatch] = useReducer(appReducer, initialState);
   const [themeState, themeDispatch] = useReducer(themeReducer, initialThemeState);
   const theme = getThemeByName(themeState.appTheme);
-  const [planets, setPlanets] = useState<Planet[]>([]);
-  const [publicationDates, setPublicationDates] = useState<string[]|null>();
+  const [app, appDispatch] = useReducer(appReducer, initialAppState);
 
   useEffect(() => {
     fetchPlanets().then((planets: Planet[]) => {
-      setPlanets(planets);
+      appDispatch({type: AppActionTypes.setPlanets, value: [...planets]});
       const publicationDates = getDistinctPublicationDate(planets);
-      setPublicationDates(publicationDates);
+      appDispatch({type: AppActionTypes.setPublicationDates, value: [...publicationDates]});
     });
   }, []);
   return (
@@ -97,10 +104,11 @@ export function App(props: { theme: Theme }) {
         </Grid>
       </Grid>
       <Box className={classes.appWrapper}>
-          <Box className={classes.boxItem}><ControlPanel /></Box>
+          <Box className={classes.boxItem}>
+            <ControlPanel publicationDates={app.publicationDates}/>
+          </Box>
           <Box className={classes.boxItem} flexGrow={1}>
-            {planets.length && <PlanetChart planets={planets} theme={theme} />}
-            <TimelineSlider publicationDates={publicationDates} />
+            {app.planets.length && <PlanetChart planets={app.planets} theme={theme} />}
           </Box>
       </Box>
       </Grid>
@@ -108,4 +116,9 @@ export function App(props: { theme: Theme }) {
   );
 }
 
-export default withTheme(App);
+const mapStateToProps = (state: any, props: any) => ({
+  ...state,
+  ...props
+});
+
+export default withTheme(connect(mapStateToProps)(App));

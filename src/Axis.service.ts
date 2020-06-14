@@ -1,5 +1,5 @@
 import { AXIS_GROUPS } from './App.constants';
-import { AxisOption, AxisGroup } from './AxisOption.interface';
+import { AxisGroup, AxisOption } from './AxisOption.interface';
 import { Planet } from './Planet.interface';
 
 export function getLabelFromKey (axisAttribute: string):AxisOption  {
@@ -8,9 +8,7 @@ export function getLabelFromKey (axisAttribute: string):AxisOption  {
         matchingAxis = axisGroup.axes.filter((axisOption: AxisOption) => {
             return axisOption.attribute === axisAttribute;
         });
-        if(matchingAxis.length) {
-            return true;
-        }
+        return matchingAxis.length;
     });
     return matchingAxis[0];
 
@@ -26,12 +24,12 @@ export function getCategoriesWithCounts(planets: Planet[], axisAttribute: string
         if (!result[currentValue[axisAttribute]]) {
             result[currentValue[axisAttribute]] = {
                 key: currentValue[axisAttribute],
+                dateCount: 0,
                 count: 0
             };
         }
-        if(dateFilter(comparisonDate, currentValue)) {
-            result[currentValue[axisAttribute]].count += 1;
-        }
+        result[currentValue[axisAttribute]].dateCount += dateFilter(comparisonDate, currentValue) ? 1 : 0;
+        result[currentValue[axisAttribute]].count += 1;
         return result;
         }, {}
     );

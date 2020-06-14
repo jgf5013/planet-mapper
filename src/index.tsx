@@ -1,19 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CssBaseline } from '@material-ui/core';
-
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import { StateProvider, AppStateContext } from './StateProvider';
-
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-
-import { appReducer } from './App.reducer';
-
+import App from './App';
+import { combinedAppReducer } from './App.reducer';
 import './PlanetChart.css';
+import * as serviceWorker from './serviceWorker';
 
-const store = createStore(appReducer);
+
+
+
+
+const store = createStore(combinedAppReducer);
 
 ReactDOM.render(
     <Provider store={store}>

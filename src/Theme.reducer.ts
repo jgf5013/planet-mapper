@@ -7,17 +7,22 @@ export const initialState: ThemeState = {
 };
 
 export function themeReducer(state: ThemeState = initialState, action: any): ThemeState {
-    console.info('themeReducer', 'state: ', state, 'action: ', action);
-    switch(action.type) {
-      case ThemeActionTypes.toggleTheme:
-        const newState = {
-          ...state,
-          appTheme: state.appTheme === 'darkTheme' ? 'lightTheme' : 'darkTheme',
-          themeChecked: !state.themeChecked
-        };
-        return newState;
-      default:
-        return state;
-        // throw new Error();
-    };
+  console.group('themeReducer ', action);
+  console.log('state: ', state);
+  let newState = { ...state };
+  switch(action.type) {
+    case ThemeActionTypes.toggleTheme:
+      newState = {
+        ...state,
+        appTheme: state.appTheme === 'darkTheme' ? 'lightTheme' : 'darkTheme',
+        themeChecked: !state.themeChecked
+      };
+      break;
+    default:
+      console.warn('default...');
+      // throw new Error();
+  };
+  console.log('newState: ', newState);
+  console.groupEnd();
+  return newState;
 };

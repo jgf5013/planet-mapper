@@ -1,18 +1,17 @@
-import React, { useReducer } from 'react';
-import { connect } from 'react-redux';
+import { createStyles, ListSubheader, makeStyles, Theme } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import React from 'react';
+import { connect } from 'react-redux';
 import { AXIS_GROUPS } from './App.constants';
 import { AxisGroup, AxisOption } from './AxisOption.interface';
-
-
-import { makeStyles, createStyles, Theme, ListSubheader, ListItem } from '@material-ui/core';
-import { controlPanelReducer, initialState as initialControlPanelState } from './ControlPanel.reducer';
 import { ControlPanelActionTypes } from './ControlPanel.actions';
 import { ControlPanelState } from './ControlPanel.interface';
+
+
+
 // import { appReducer } from './App.reducer';
 
 
@@ -79,7 +78,7 @@ const Axis:React.FC<ConnectedControlPanelProps> = (props) => {
     );
 }
 
-const mapStateToProps = (state: ControlPanelState, props: any) => ({
+const mapStateToProps = (state: any, props: any) => ({
     ...state,
     ...props    
 });

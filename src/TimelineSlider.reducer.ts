@@ -7,22 +7,30 @@ export const initialState: TimelineSliderState = {
 };
 
 export function timelineSliderReducer(state: TimelineSliderState = initialState, action: any): TimelineSliderState {
+
+    console.group('timelineSliderReducer ', action);
+    console.log('state: ', state);
+    let newState = { ...state };
     switch(action.type) {
       case TimelineSliderActionTypes.tick:
         var newDate = new Date();
         newDate.setDate(state.date.getDate()+1);
-        const newState = {
-          ...state,
+        newState = {
+          ...newState,
           date: newDate
         };
-        return newState;
+        break;
       case TimelineSliderActionTypes.set:
-        return {
-          ...state,
+        newState = {
+          ...newState,
           date: action.value
         };
+        break;
       default:
-        return state;
+        console.warn('default...');
         // throw new Error();
     };
+    console.log('newState: ', newState);
+    console.groupEnd();
+    return newState;
 }

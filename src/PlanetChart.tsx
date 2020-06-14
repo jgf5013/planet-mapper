@@ -1,26 +1,14 @@
-import React, { useContext } from 'react';
-
+import { Theme } from '@material-ui/core';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
-// import './PlanetChart.css';
-
-import { Planet } from './Planet.interface';
-import { AxisOption } from './AxisOption.interface';
-import { Theme, createStyles, makeStyles } from '@material-ui/core';
-import { ControlPanelState } from './ControlPanel.interface';
+import React from 'react';
 import { connect } from 'react-redux';
-import { getLabelFromKey, getCategories, getCategoriesWithCounts } from './Axis.service';
+import { getCategoriesWithCounts, getLabelFromKey } from './Axis.service';
+import { AxisOption } from './AxisOption.interface';
+import { ControlPanelState } from './ControlPanel.interface';
+import { Planet } from './Planet.interface';
 import { TimelineSliderState } from './TimelineSlider.interface';
 
-
-// const useStyles = makeStyles((theme: Theme) =>
-//     createStyles({
-//       highchartsLegend: {
-//         minHeight: 100
-//       }
-//     })
-// )
 
 interface PlanetProps {
   theme: Theme,
@@ -37,10 +25,6 @@ export class PlanetChart extends React.Component<PlanetProps> {
 
   chartOptions: Highcharts.Options = {}
 
-  constructor(props: PlanetProps) {
-    super(props);
-
-  }
   
   render() {
     const xAxis: AxisOption = getLabelFromKey(this.props.controlPanel.xAxis);
@@ -55,21 +39,19 @@ export class PlanetChart extends React.Component<PlanetProps> {
         const colorCategory: string = p[selectedColorCategory]
         return {x, y, t, colorCategory};
       })
-    // const visiblePlanetsForDate = filterMappedPlanets
-    //   .filter(p => {
-    //     return p.t <= this.props.timelineSlider.date;
-    //   });
-    // const colorCategories: any[] = getCategories(filterMappedPlanets, 'colorCategory');
-    const filterFunction: Function = (date: Date, p: any) => { return p.t <= date };
+    const dateFilterFunction: Function = (date: Date, p: any) => {
+      return p.t <= date
+    };
     const comparisonDate: Date = this.props.timelineSlider.date;
-    const colorCategoriesWithCounts: any[] = getCategoriesWithCounts(filterMappedPlanets, 'colorCategory', comparisonDate, filterFunction);
+    const colorCategoriesWithCounts: any[] = getCategoriesWithCounts(filterMappedPlanets, 'colorCategory', comparisonDate, dateFilterFunction);
     let mappedColorCategoryCounts = {};
-    colorCategoriesWithCounts.forEach((cc) => { mappedColorCategoryCounts[cc.key] = cc.count });
+    colorCategoriesWithCounts.forEach((cc) => { mappedColorCategoryCounts[cc.key] = cc.dateCount });
     this.chartOptions = {
       chart: {
         type: 'scatter',
         backgroundColor: this.props.theme.palette.background.default
       },
+      title: undefined,
       legend: {
         itemStyle: {
           color: this.props.theme.palette.text.primary
@@ -80,23 +62,18 @@ export class PlanetChart extends React.Component<PlanetProps> {
       },
       xAxis: {
         min: Math.min(...filterMappedPlanets.map(p => p.x)),
-        max: Math.max(...filterMappedPlanets.map(p => p.x))
+        max: Math.max(...filterMappedPlanets.map(p => p.x)),
+        title: {
+          text: `${xAxis.label}${xAxis.units ? ' [' + xAxis.units + ']' : ''}`
+        }
       },
       yAxis: {
         min: Math.min(...filterMappedPlanets.map(p => p.y)),
-        max: Math.max(...filterMappedPlanets.map(p => p.y))
+        max: Math.max(...filterMappedPlanets.map(p => p.y)),
+        title: {
+          text: `${yAxis.label}${yAxis.units ? ' [' + yAxis.units + ']' : ''}`
+        }
       },
-      // title: {
-      //   text: `${xAxis.label} vs ${yAxis.label}`,
-      //   style: {
-      //     color: this.props.theme.palette.text.primary
-      //   },
-      //   margin: 25
-      // },
-      // subtitle: {
-      //   text: `<a style="color: ${this.props.theme.palette.text.primary}; margin: 20px;" href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">exoplanetarchive.ipac.caltech.edu</a>`,
-      //   useHTML: true,
-      // },
       plotOptions: {
         scatter: {
           marker: {
@@ -109,12 +86,15 @@ export class PlanetChart extends React.Component<PlanetProps> {
           },
           tooltip: {
             headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: `{point.x} ${xAxis.units}, {point.y} ${yAxis.units}`
+            pointFormat: `{point.x}${xAxis.units ? ' ' + xAxis.units : ''}, {point.y} ${yAxis.units ? ' ' + yAxis.units : ''}`
           }
         }
       },
       series: Object.keys(mappedColorCategoryCounts).map((colorCategory) => {
-        const visiblePlanetsForColor = filterMappedPlanets.filter(p => p.colorCategory === colorCategory);
+        const visiblePlanetsForColor = filterMappedPlanets
+          .filter(p => {
+            return (p.colorCategory === colorCategory && dateFilterFunction(comparisonDate, p))
+          });
         return {
           type: 'scatter',
           name: `${colorCategory} (${mappedColorCategoryCounts[colorCategory]})`,
