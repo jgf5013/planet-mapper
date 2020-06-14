@@ -12,8 +12,8 @@ export const initialAppState: AppState = {
 };
 
 export function appReducer(state: AppState = initialAppState, action: any): AppState {
-  console.group('appReducer ', action);
-  console.log('state: ', state);
+  // console.group('appReducer ', action);
+  // console.log('state: ', state);
   let newState = { ...state };
   switch(action.type) {
     case AppActionTypes.setPlanets:
@@ -26,8 +26,8 @@ export function appReducer(state: AppState = initialAppState, action: any): AppS
       console.warn('default...');
       // throw new Error();
   };
-  console.log('newState: ', newState);
-  console.groupEnd();
+  // console.log('newState: ', newState);
+  // console.groupEnd();
   return newState;
 }
 

@@ -3,34 +3,39 @@ import { TimelineSliderState } from './TimelineSlider.interface';
 
 
 export const initialState: TimelineSliderState = {
-  date: new Date()
+  dateOffSet: 0,
+  clock: null
 };
 
 export function timelineSliderReducer(state: TimelineSliderState = initialState, action: any): TimelineSliderState {
 
-    console.group('timelineSliderReducer ', action);
-    console.log('state: ', state);
+    // console.group('timelineSliderReducer ', action);
+    // console.log('state: ', state);
     let newState = { ...state };
     switch(action.type) {
       case TimelineSliderActionTypes.tick:
-        var newDate = new Date();
-        newDate.setDate(state.date.getDate()+1);
         newState = {
           ...newState,
-          date: newDate
+          dateOffSet: Number(state.dateOffSet) + 1
         };
         break;
       case TimelineSliderActionTypes.set:
         newState = {
           ...newState,
-          date: action.value
+          dateOffSet: Number(action.value)
+        };
+        break;
+      case TimelineSliderActionTypes.stopClock:
+        newState = {
+          ...newState,
+          clock: null
         };
         break;
       default:
         console.warn('default...');
         // throw new Error();
     };
-    console.log('newState: ', newState);
-    console.groupEnd();
+    // console.log('newState: ', newState);
+    // console.groupEnd();
     return newState;
 }

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { AppState } from './App.interface';
 import { TimelineSliderActionTypes } from './TimelineSlider.actions';
 import { TimelineSliderState } from './TimelineSlider.interface';
+import ReplayIcon from '@material-ui/icons/Replay';
 
 
 
@@ -26,30 +27,28 @@ interface ConnectedTimelineSliderProps {
     timelineSlider: TimelineSliderState;
     tick: Function;
     sliderValueChange: Function;
+    handleReplay: Function;
+    stopClocK: Function;
 }
 
 
 const TimelineSlider:React.FC<ConnectedTimelineSliderProps> = (props) => {
 
-    // React.useEffect(() => {
-    //     setTimeout(() => {
-    //         props.tick()
-    //     }, 1000);
-    // }, []);
     const classes = useStyles();
-    // const [app] = useReducer(appReducer, initialAppState);
-    // console.log('TLS app: ', app);
-    console.log('TLS props: ', props);
 
     if(!props.publicationDates || !props.publicationDates.length) {
         return (null);
     }
 
+    if(props.timelineSlider.clock && props.timelineSlider.dateOffSet === 0) {
+        clearInterval(props.timelineSlider.clock);
+        props.stopClocK();
+    }
+
     const minPublicationDate = moment(props.publicationDates[0]);
-    const maxPublicationDate = moment(props.publicationDates[props.publicationDates.length - 1]);
     const today = moment();
-    const monthsBetween = today.diff(minPublicationDate, 'months') + 1;
-    console.log('monthsBetween: ', monthsBetween);
+    const yearsBetween = today.diff(minPublicationDate, 'years');
+    const sliderDate = moment().add(props.timelineSlider.dateOffSet, 'years');
     return (
         <Grid container className={classes.gridContainer} spacing={2}>
             <Grid item xs={1}>
@@ -58,9 +57,10 @@ const TimelineSlider:React.FC<ConnectedTimelineSliderProps> = (props) => {
             <Grid item xs={7}>
                 <Slider
                     aria-labelledby="discrete-slider-always"
-                    min={0}
-                    max={monthsBetween}
-                    defaultValue={monthsBetween}
+                    min={-yearsBetween}
+                    max={0}
+                    value={props.timelineSlider.dateOffSet}
+                    defaultValue={0}
                     step={1}
                     onChange={(event, value) => props.sliderValueChange(value)}
                 />
@@ -69,7 +69,8 @@ const TimelineSlider:React.FC<ConnectedTimelineSliderProps> = (props) => {
                 <Input
                     className={classes.inputDate}
                     disabled
-                    value={props.timelineSlider.date.toISOString().slice(0, 10)}/>
+                    value={sliderDate.toISOString().slice(0, 10)}/>
+                    <span onClick={event => props.handleReplay()}><ReplayIcon /></span>
             </Grid>
         </Grid>
     );
@@ -81,17 +82,33 @@ const mapStateToProps = (state: any, props: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: Function, props: any) => ({
-    tick: (): void => { 
-        dispatch({
-            type: TimelineSliderActionTypes.tick
-        });
-    },
-    sliderValueChange: (daysSinceMinimum: number): void => {
-        const newSliderDate = moment(props.publicationDates[0]).add(daysSinceMinimum, 'months');
+    handleReplay: (): void => {
+        const yearsBetween = moment().diff(props.publicationDates[0], 'years');
         dispatch({
             type: TimelineSliderActionTypes.set,
-            value: newSliderDate.toDate()
-        })
+            value: -yearsBetween
+        });
+        const runningTimer = setInterval(() => {
+            dispatch({
+                type: TimelineSliderActionTypes.tick
+            });
+        }, 100);
+
+        dispatch({
+            type: TimelineSliderActionTypes.startClock,
+            value: runningTimer
+        });
+    },
+    stopClock: (): void => {
+        dispatch({
+            type: TimelineSliderActionTypes.stopClock
+        });
+    },
+    sliderValueChange: (daysBeforeToday: number): void => {
+        dispatch({
+            type: TimelineSliderActionTypes.set,
+            value: daysBeforeToday
+        });
     }
 });
 

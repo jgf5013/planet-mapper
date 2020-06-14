@@ -7,8 +7,8 @@ export const initialState: ThemeState = {
 };
 
 export function themeReducer(state: ThemeState = initialState, action: any): ThemeState {
-  console.group('themeReducer ', action);
-  console.log('state: ', state);
+  // console.group('themeReducer ', action);
+  // console.log('state: ', state);
   let newState = { ...state };
   switch(action.type) {
     case ThemeActionTypes.toggleTheme:
@@ -22,7 +22,7 @@ export function themeReducer(state: ThemeState = initialState, action: any): The
       console.warn('default...');
       // throw new Error();
   };
-  console.log('newState: ', newState);
-  console.groupEnd();
+  // console.log('newState: ', newState);
+  // console.groupEnd();
   return newState;
 };

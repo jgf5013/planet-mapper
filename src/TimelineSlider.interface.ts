@@ -1,3 +1,4 @@
 export interface TimelineSliderState {
-    date: Date;
+    dateOffSet: number;
+    clock: any;
 }

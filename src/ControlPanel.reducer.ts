@@ -10,8 +10,8 @@ export const initialState: ControlPanelState = {
 };
 
 export function controlPanelReducer(state: ControlPanelState = initialState, action: any): ControlPanelState {
-  console.group('controlPanelReducer ', action);
-  console.log('state: ', state);
+  // console.group('controlPanelReducer ', action);
+  // console.log('state: ', state);
   let newState = { ...state };
   switch(action.type) {
     case ControlPanelActionTypes.changeAxis:
@@ -21,7 +21,7 @@ export function controlPanelReducer(state: ControlPanelState = initialState, act
       console.warn('default...');
       // throw new Error();
   };
-  console.log('newState: ', newState);
-  console.groupEnd();
+  // console.log('newState: ', newState);
+  // console.groupEnd();
   return newState;
 }

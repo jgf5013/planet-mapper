@@ -1,6 +1,10 @@
 import { Theme } from '@material-ui/core';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+import moment from 'moment';
+
+import HC_more from 'highcharts/highcharts-more' //module
 import React from 'react';
 import { connect } from 'react-redux';
 import { getCategoriesWithCounts, getLabelFromKey } from './Axis.service';
@@ -9,6 +13,8 @@ import { ControlPanelState } from './ControlPanel.interface';
 import { Planet } from './Planet.interface';
 import { TimelineSliderState } from './TimelineSlider.interface';
 
+
+HC_more(Highcharts) //init module
 
 interface PlanetProps {
   theme: Theme,
@@ -33,22 +39,25 @@ export class PlanetChart extends React.Component<PlanetProps> {
     const filterMappedPlanets: any[] = this.props.planets
       .filter(p => p[xAxis.attribute] && p[yAxis.attribute] && typeof p.pl_publ_date !== 'undefined' && p['pl_publ_date']) //filters out null values
       .map((p) => {
+        const name: string = p['pl_name'];
         const x: number = Number(p[xAxis.attribute]);
         const y: number = Number(p[yAxis.attribute]);
+        const z: number = Number(p['pl_radj'])
         const t: Date = p['pl_publ_date'] ? new Date(p['pl_publ_date']) : new Date();
         const colorCategory: string = p[selectedColorCategory]
-        return {x, y, t, colorCategory};
+        return {name, x, y, z, t, colorCategory};
       })
     const dateFilterFunction: Function = (date: Date, p: any) => {
       return p.t <= date
     };
-    const comparisonDate: Date = this.props.timelineSlider.date;
+    const comparisonDate: Date = moment().add(this.props.timelineSlider.dateOffSet, 'years').toDate();
     const colorCategoriesWithCounts: any[] = getCategoriesWithCounts(filterMappedPlanets, 'colorCategory', comparisonDate, dateFilterFunction);
     let mappedColorCategoryCounts = {};
     colorCategoriesWithCounts.forEach((cc) => { mappedColorCategoryCounts[cc.key] = cc.dateCount });
     this.chartOptions = {
       chart: {
-        type: 'scatter',
+        type: 'bubble',
+        zoomType: 'xy',
         backgroundColor: this.props.theme.palette.background.default
       },
       title: undefined,
@@ -74,21 +83,16 @@ export class PlanetChart extends React.Component<PlanetProps> {
           text: `${yAxis.label}${yAxis.units ? ' [' + yAxis.units + ']' : ''}`
         }
       },
-      plotOptions: {
-        scatter: {
-          marker: {
-            radius: 2,
-            states: {
-              hover: {
-                enabled: true,
-              }
-            }
-          },
-          tooltip: {
-            headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: `{point.x}${xAxis.units ? ' ' + xAxis.units : ''}, {point.y} ${yAxis.units ? ' ' + yAxis.units : ''}`
-          }
-        }
+      tooltip: {
+          useHTML: true,
+          headerFormat: '<table>',
+          pointFormat: `
+              <tr><th colspan="2"><h3>{point.name}</h3></th></tr>
+              <tr><th>${xAxis.label}</th><td>{point.x}${xAxis.units ? ' [' + xAxis.units + ']' : ''}</td></tr>
+              <tr><th>${yAxis.label}</th><td>{point.y}${yAxis.units ? ' [' + yAxis.units + ']' : ''}</td></tr>
+              <tr><th>Radius</th><td>{point.z} Jupiter Masses</td></tr>`,
+          footerFormat: '</table>',
+          followPointer: false
       },
       series: Object.keys(mappedColorCategoryCounts).map((colorCategory) => {
         const visiblePlanetsForColor = filterMappedPlanets
@@ -96,7 +100,7 @@ export class PlanetChart extends React.Component<PlanetProps> {
             return (p.colorCategory === colorCategory && dateFilterFunction(comparisonDate, p))
           });
         return {
-          type: 'scatter',
+          type: 'bubble',
           name: `${colorCategory} (${mappedColorCategoryCounts[colorCategory]})`,
           data: visiblePlanetsForColor,
           marker: {

@@ -66,7 +66,7 @@ interface ConnectedAppProps {
 
 const App:React.FC<ConnectedAppProps> = (props) => {
 
-  console.log('App props: ', props);
+  // console.log('App props: ', props);
 
   const classes = useStyles();
 
