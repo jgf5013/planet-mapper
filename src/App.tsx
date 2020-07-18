@@ -15,7 +15,6 @@ import { ThemeActionTypes } from './Theme.actions';
 import { ThemeState } from './Theme.interface';
 import { initialState as initialThemeState, themeReducer } from './Theme.reducer';
 import { getThemeByName } from './themes/base';
-import TimelineSlider from './TimelineSlider';
 import { TimelineSliderState } from './TimelineSlider.interface';
 
 

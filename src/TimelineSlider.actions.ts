@@ -1,5 +1,6 @@
 export const TimelineSliderActionTypes = {
-    startClock: '[TimelineSlider] START_CLOCK',
+    playClock: '[TimelineSlider] START_CLOCK',
+    pauseClock: '[TimelineSlider] PAUSE_CLOCK',
     stopClock: '[TimelineSlider] STOP_CLOCK',
     tick: '[TimelineSlider] TICK',
     set: '[TimelineSlider] SET'

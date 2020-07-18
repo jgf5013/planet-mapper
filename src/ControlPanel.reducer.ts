@@ -17,9 +17,6 @@ export function controlPanelReducer(state: ControlPanelState = initialState, act
     case ControlPanelActionTypes.changeAxis:
       newState[action.key] = action.value;
       break;
-    default:
-      console.warn('default...');
-      // throw new Error();
   };
   // console.log('newState: ', newState);
   // console.groupEnd();

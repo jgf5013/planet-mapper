@@ -94,6 +94,12 @@ export class PlanetChart extends React.Component<PlanetProps> {
           footerFormat: '</table>',
           followPointer: false
       },
+      plotOptions: {
+        bubble: {
+          minSize: '1%',
+          maxSize: '10%'
+        }
+      },
       series: Object.keys(mappedColorCategoryCounts).map((colorCategory) => {
         const visiblePlanetsForColor = filterMappedPlanets
           .filter(p => {

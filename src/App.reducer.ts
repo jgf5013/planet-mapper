@@ -22,9 +22,6 @@ export function appReducer(state: AppState = initialAppState, action: any): AppS
     case AppActionTypes.setPublicationDates:
       newState['publicationDates'] = action.value
       break;
-    default:
-      console.warn('default...');
-      // throw new Error();
   };
   // console.log('newState: ', newState);
   // console.groupEnd();

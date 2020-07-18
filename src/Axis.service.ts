@@ -2,7 +2,7 @@ import { AXIS_GROUPS } from './App.constants';
 import { AxisGroup, AxisOption } from './AxisOption.interface';
 import { Planet } from './Planet.interface';
 
-export function getLabelFromKey (axisAttribute: string):AxisOption  {
+export function getLabelFromKey (axisAttribute: string): AxisOption  {
     let matchingAxis: AxisOption[] = [];
     AXIS_GROUPS.some((axisGroup: AxisGroup) => {
         matchingAxis = axisGroup.axes.filter((axisOption: AxisOption) => {

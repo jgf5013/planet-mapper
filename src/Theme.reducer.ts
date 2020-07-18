@@ -18,9 +18,6 @@ export function themeReducer(state: ThemeState = initialState, action: any): The
         themeChecked: !state.themeChecked
       };
       break;
-    default:
-      console.warn('default...');
-      // throw new Error();
   };
   // console.log('newState: ', newState);
   // console.groupEnd();

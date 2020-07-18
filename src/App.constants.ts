@@ -100,8 +100,8 @@ export const AXIS_GROUPS: AxisGroup[] = [
             units: null,
             type: "Categorical"
         }, {
-            label: "Discovery Year",
-            attribute: "rowupdate", // TODO: Not sure if this is right
+            label: "Discovery Date",
+            attribute: "pl_publ_date", // TODO: Not sure if this is right
             units: null,
             type: "Numeric"
         }]

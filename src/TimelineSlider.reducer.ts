@@ -4,19 +4,33 @@ import { TimelineSliderState } from './TimelineSlider.interface';
 
 export const initialState: TimelineSliderState = {
   dateOffSet: 0,
-  clock: null
+  clock: null,
+  clockState: 'STOPPED'
 };
 
 export function timelineSliderReducer(state: TimelineSliderState = initialState, action: any): TimelineSliderState {
+
+
 
     // console.group('timelineSliderReducer ', action);
     // console.log('state: ', state);
     let newState = { ...state };
     switch(action.type) {
+      case TimelineSliderActionTypes.playClock:
+        newState = {
+          ...newState,
+          clock: action.value,
+          clockState: 'RUNNING'
+        };
+        break;
       case TimelineSliderActionTypes.tick:
         newState = {
           ...newState,
-          dateOffSet: Number(state.dateOffSet) + 1
+          dateOffSet: Math.min(
+            newState.clockState === 'RUNNING' ? Number(state.dateOffSet) + 1 : Number(state.dateOffSet), //negative #
+            0
+          ),
+          clockState: 'RUNNING'
         };
         break;
       case TimelineSliderActionTypes.set:
@@ -25,15 +39,20 @@ export function timelineSliderReducer(state: TimelineSliderState = initialState,
           dateOffSet: Number(action.value)
         };
         break;
-      case TimelineSliderActionTypes.stopClock:
+      case TimelineSliderActionTypes.pauseClock:
         newState = {
           ...newState,
-          clock: null
+          clockState: 'PAUSED'
         };
         break;
-      default:
-        console.warn('default...');
-        // throw new Error();
+      case TimelineSliderActionTypes.stopClock:
+        clearInterval(newState.clock);
+        newState = {
+          ...newState,
+          clock: null,
+          clockState: 'STOPPED'
+        };
+        break;
     };
     // console.log('newState: ', newState);
     // console.groupEnd();

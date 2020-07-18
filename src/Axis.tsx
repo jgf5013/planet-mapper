@@ -11,10 +11,6 @@ import { ControlPanelActionTypes } from './ControlPanel.actions';
 import { ControlPanelState } from './ControlPanel.interface';
 
 
-
-// import { appReducer } from './App.reducer';
-
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -29,12 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
-
-// interface ControlPanelProps {
-//     axisLabel: string;
-//     selectedValue: string;
-//     stateKey: string;
-// }
 
 interface ConnectedControlPanelProps {
     axisLabel: string;
