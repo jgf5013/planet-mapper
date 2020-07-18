@@ -69,11 +69,11 @@ const ControlPanel:React.FC<ConnectedControlPanelProps> = (props) => {
       <ExpansionPanelDetails>
           <Grid container className={classes.root} justify="space-between">
             <Grid container className={classes.elementContainer} direction="column" justify="space-between">
-              <Axis type="Categorical" stateKey="colorCategory" selectedValue={initialState.colorCategory} axisLabel={'Color'}/>
+              <Axis allowedTypes="[Categorical]" stateKey="colorCategory" selectedValue={initialState.colorCategory} axisLabel={'Color'}/>
             </Grid>
             <Grid container className={classes.elementContainer} direction="column" justify="space-between">
-              <Axis type="Numeric" stateKey="xAxis" selectedValue={initialState.xAxis} axisLabel={'X Axis'}/>
-              <Axis type="Numeric" stateKey="yAxis" selectedValue={initialState.yAxis} axisLabel={'Y Axis'}/>
+              <Axis allowedTypes="[Numeric, Date]" stateKey="xAxis" selectedValue={initialState.xAxis} axisLabel={'X Axis'}/>
+              <Axis allowedTypes="[Numeric]" stateKey="yAxis" selectedValue={initialState.yAxis} axisLabel={'Y Axis'}/>
             </Grid>
             <Grid container className={classes.elementContainer} direction="column" justify="space-between">
               <TimelineSlider publicationDates={props.publicationDates}/>

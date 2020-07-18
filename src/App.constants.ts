@@ -49,11 +49,6 @@ export const AXIS_GROUPS: AxisGroup[] = [
             units: "Days",
             type: "Numeric"
         }, {
-            label: "Planet's Orbital Period Limit Flag",
-            attribute: "pl_orbperlim",
-            units: null,
-            type: "Numeric"
-        }, {
             label: "Planet's Orbital Period # of Measurements",
             attribute: "pl_orbpern",
             units: null,
@@ -103,7 +98,7 @@ export const AXIS_GROUPS: AxisGroup[] = [
             label: "Discovery Date",
             attribute: "pl_publ_date", // TODO: Not sure if this is right
             units: null,
-            type: "Numeric"
+            type: "Date"
         }]
     }
 ];

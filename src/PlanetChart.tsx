@@ -40,8 +40,9 @@ export class PlanetChart extends React.Component<PlanetProps> {
       .filter(p => p[xAxis.attribute] && p[yAxis.attribute] && typeof p.pl_publ_date !== 'undefined' && p['pl_publ_date']) //filters out null values
       .map((p) => {
         const name: string = p['pl_name'];
-        const x: number = Number(p[xAxis.attribute]);
-        const y: number = Number(p[yAxis.attribute]);
+        const x: any = isNaN(p[xAxis.attribute]) ? new Date(p[xAxis.attribute]) : Number(p[xAxis.attribute]);
+        const y: any = isNaN(p[yAxis.attribute]) ? new Date(p[yAxis.attribute]) : Number(p[yAxis.attribute]);
+
         const z: number = Number(p['pl_radj'])
         const t: Date = p['pl_publ_date'] ? new Date(p['pl_publ_date']) : new Date();
         const colorCategory: string = p[selectedColorCategory]
@@ -70,6 +71,7 @@ export class PlanetChart extends React.Component<PlanetProps> {
         verticalAlign: 'bottom',
       },
       xAxis: {
+        type: xAxis.type === 'Date' ? 'datetime' : 'linear',
         min: Math.min(...filterMappedPlanets.map(p => p.x)),
         max: Math.max(...filterMappedPlanets.map(p => p.x)),
         title: {
@@ -77,6 +79,7 @@ export class PlanetChart extends React.Component<PlanetProps> {
         }
       },
       yAxis: {
+        type: yAxis.type === 'Date' ? 'datetime' : 'linear',
         min: Math.min(...filterMappedPlanets.map(p => p.y)),
         max: Math.max(...filterMappedPlanets.map(p => p.y)),
         title: {

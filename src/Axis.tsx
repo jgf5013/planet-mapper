@@ -32,15 +32,15 @@ interface ConnectedControlPanelProps {
     handleAxisChange: Function;
     selectedValue: string;
     stateKey: string;
-    type: string;
+    allowedTypes: string[];
 }
 
 const Axis:React.FC<ConnectedControlPanelProps> = (props) => {
     
-    const renderSubList = (axisGroup: AxisGroup, type: string) => {
+    const renderSubList = (axisGroup: AxisGroup, allowedTypes: string[]) => {
         if(!axisGroup) { return []; }
         const menuItems = axisGroup.axes
-            .filter((axis: AxisOption) => (axis.type === type))
+            .filter((axis: AxisOption) => (allowedTypes.indexOf(axis.type) > -1))
             .map((axis: AxisOption) => (
                 <MenuItem key={`${axisGroup.category}-${axis.attribute}`} value={axis.attribute}>{axis.label}</MenuItem>
             ));
@@ -57,11 +57,15 @@ const Axis:React.FC<ConnectedControlPanelProps> = (props) => {
                     id="axis-select"
                     value={props.controlPanel[props.stateKey]}
                     onChange={event => props.handleAxisChange(event.target.value as string)}>
-                        {AXIS_GROUPS.map((axisGroup: AxisGroup) => ([
-                        <ListSubheader key={axisGroup.category}>{axisGroup.category}</ListSubheader>,
-                        [...renderSubList(axisGroup, props.type)]
-                        ])
-                )}
+                    {AXIS_GROUPS.map((axisGroup: AxisGroup) => {
+                        let subList = renderSubList(axisGroup, props.allowedTypes);
+                        if (subList.length) {
+                            return ([
+                                <ListSubheader key={axisGroup.category}>{axisGroup.category}</ListSubheader>,
+                                [...subList]
+                            ]);
+                        }
+                    })}
                 </Select>
             </FormControl>
         </div>
@@ -74,7 +78,8 @@ const mapStateToProps = (state: any, props: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: Function, props: any) => ({
-    handleAxisChange: (attribute: string): void => { 
+    handleAxisChange: (attribute: string): void => {
+        if(!attribute) { return; }
         dispatch({
             type: ControlPanelActionTypes.changeAxis,
             key: props.stateKey,
