@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/planet-mapper/precache-manifest.caccddf53ce7d1f0d87cba100ad0d778.js"
+  "/planet-mapper/precache-manifest.cb772af5345e3a2fefed67d614c6488d.js"
 );
 
 self.addEventListener('message', (event) => {
